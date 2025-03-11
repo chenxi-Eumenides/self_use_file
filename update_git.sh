@@ -96,7 +96,7 @@ git_update() {
         content="$* at $(date +%F_%T)"
     fi
     git commit -m "${content}"
-    git push github master:master
+    git push github
 }
 
 init() {
