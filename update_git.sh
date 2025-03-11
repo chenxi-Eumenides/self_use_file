@@ -39,6 +39,14 @@ copy_file() {
     try_cp $tem/Empty_Service.service $tgt/templates/Empty_Service.service
 
     try_cp $con $tgt/config
+
+    try_cp $HOME/Apps/blog/build.sh $tgt/scripts/apps/hugo-build.sh
+    try_cp $HOME/Apps/AI-webUI/run.sh $tgt/scripts/apps/openwebui-run.sh
+
+    try_cp $HOME/Games/Minecraft/Server/run.sh $tgt/scripts/games/minecraft-server-manager-run.sh
+    try_cp $HOME/Games/Minecraft/Server/default.run_server.sh $tgt/scripts/games/minecraft-server-run.sh
+    try_cp $HOME/Games/Terraria/run.sh $tgt/scripts/games/terraria-server-run.sh
+    try_cp $HOME/Games/Tmodloader/run.sh $tgt/scripts/games/tmodloader-server-manager-run.sh
 }
 
 delete_file() {
