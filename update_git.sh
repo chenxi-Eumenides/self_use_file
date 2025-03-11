@@ -64,7 +64,7 @@ delete_find() {
 try_cp() {
     [[ -n $1 ]] || return 1
     [[ -n $2 ]] || return 1
-    $DEBUG && echo "cp $1 $2" && return 0
+#    $DEBUG && echo "cp $1 $2" && return 0
 
     s=$1
     t=$2
@@ -82,12 +82,11 @@ try_cp() {
             return 0
         }
         [[ -e $(dirname $t) ]] || {
-            echo mkdir $(dirname $t)
             mkdir -p $(dirname $t)
-            cp $s $t
-            echo copy $t
-            return 0
         }
+        cp $s $t
+        echo copy $t
+        return 0
         echo $t is not existed
     }
     [[ -d $s ]] && {
