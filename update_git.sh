@@ -82,9 +82,11 @@ try_cp() {
             return 0
         }
         [[ -e $(dirname $t) ]] || {
+            echo mkdir $(dirname $t)
             mkdir -p $(dirname $t)
             cp $s $t
-            echo copy $s
+            echo copy $t
+            return 0
         }
         echo $t is not existed
     }
