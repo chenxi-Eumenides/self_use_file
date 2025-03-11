@@ -12,9 +12,11 @@ setup() {
 }
 
 main() {
+    [[ -z $1 ]] && read -p "input commit info: " input && { [ -z $input ] && echo "no input." && return 1; }
     copy_file
     delete_file
-    git_update 
+    [[ -z $input ]] && input=$*
+    git_update $input
 }
 
 copy_file() {

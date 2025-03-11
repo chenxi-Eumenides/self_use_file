@@ -101,8 +101,8 @@ main() {
         ;;
         "-r"|"--run")
             name=$2
-            find_file $2 && run_file ${@:3} && exit 0
-            check_file $2 && bash ${@:2} && exit 0
+            find_file $2 && { run_file ${@:3}; exit 0; }
+            check_file $2 && { bash ${@:2}; exit 0; }
             p_help
             exit 1
         ;;
