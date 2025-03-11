@@ -5,24 +5,26 @@ setup() {
     desc="cheni-zqs的blog网站，用hugo搭建，主题为stack。"
 }
 
-main() {
-    [[ -z $1 ]] && read -p "input commit info: " input && { [ -z $input ] && echo "no input." && return 1; }
+git_commit() {
+    [[ -z $1 ]] && read -p "input commit info: " input && {
+        [ -z $input ] && echo "no input." && return 1
+    }
     [[ -z $input ]] && input=$*
-    update_git $input
-    rm -r public/*
-    rm -r public-github/
 }
 
-build_draft() {
-    update_git $*
-    rm -r ./public-github
-    hugo --config hugo-github.yaml --buildDrafts
+build_all() {
+    build_local
+    build_github
 }
 
-build() {
-    update_git $*
-    rm -r public
+build_local() {
+    [[ -d public ]] && rm -r public
     hugo --config hugo-local.yaml
+}
+
+build_github() {
+    [[ -d docs ]] && rm -r docs
+    hugo --config hugo-github.yaml --buildDrafts
     push_git
 }
 
@@ -37,8 +39,7 @@ update_git() {
 }
 
 push_git() {
-    cd public-github
-    git push github
+    git push github master:main
 }
 
 #delete
@@ -49,19 +50,38 @@ init() {
     setup
 }
 
-help() {
+p_help() {
     echo "desc: ${desc}"
-    echo "args: build | draft ."
-    echo "commit: TYPE: content."
+    echo "args: -l | --local COMMIT   : build local"
+    echo "      -g | --github COMMIT  : build github"
+    echo "      -a | --all COMMIT     : build both"
+    echo "      -n | --no COMMIT      : git add . but not build"
+    echo "      *                     : print help"
+    echo "commit: TYPE: content"
     echo "   e.t. update: this is a simple update info."
 }
 
 init
 case $1 in
-  "build")
-    main ${@:2}
-    ;;
-  *)
-    help
-    ;;
+    "-l"|"--local"|"local")
+        git_commit ${@:2} || exit 1
+        update_git $input
+        build_local
+        ;;
+    "-g"|"--github"|"github")
+        git_commit ${@:2} || exit 1
+        update_git $input
+        build_github
+        ;;
+    "-a"|"--all"|"all")
+        git_commit ${@:2} || exit 1
+        build_all
+        ;;
+    "-n"|"--no"|"no")
+        git_commit ${@:2} || exit 1
+        update_git $input
+        ;;
+    *)
+        p_help && exit 0
+        ;;
 esac
