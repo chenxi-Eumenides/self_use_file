@@ -80,7 +80,11 @@ try_cp() {
                 echo copy $s
             } || echo same $s
             return 0
-        } || echo $t is not existed
+        }
+        [[ -e $(dirname $t) ]] || {
+            mkdir -p $(dirname $t)
+        }
+        echo $t is not existed
     }
     [[ -d $s ]] && {
         [[ -e $t ]] || { mkdir $t; echo mkdir $t;}
