@@ -5,6 +5,8 @@ setup() {
     desc="Update git repo: self_use_scripts."
     DEBUG=false
 
+    delete_list=(".zsh")
+
     scr=$HOME/Code/Scripts
     tem=$HOME/Templates
     con=$HOME/Documents/Files/Linux/config
@@ -59,10 +61,8 @@ copy_template() {
 }
 
 delete_file() {
-    for line in $(cat .gitignore); do
-        [[ $line == ".git" ]] && continue
-        [[ $line == ".gitignore" ]] && continue
-        delete_find $line
+    for item in ${delete_list}; do
+        delete_find $item
     done
 }
 
@@ -87,6 +87,10 @@ try_cp() {
             if [[ $(get_md5 $s) != $(get_md5 $t) ]] ; then
                 cp $s $t
                 echo copy $s
+                if [[ $s == $tem/Empty_File ]] ; then
+                    echo $(get_md5 $s)
+                    echo $(get_md5 $t)
+                fi
             else
                 $DEBUG && echo skip $s
             fi
