@@ -84,7 +84,7 @@ try_cp() {
             # $t is file
             if [[ $(get_md5 $s) != $(get_md5 $t) ]] ; then
                 cp $s $t
-                echo copy $s
+                echo "copy $s"
                 if [[ "$s" == "$tem/Empty_File" ]] ; then
                     echo $(get_md5 $s)
                     echo $(get_md5 $t)
@@ -96,15 +96,15 @@ try_cp() {
         fi
         [[ -e $(dirname $t) ]] || {
             mkdir -p $(dirname $t)
-            echo "$(dirname $t) not existed, create folder"
+            $DEBUG && echo "$(dirname $t) not existed, create folder"
         }
         cp $s $t
-        echo copy $t
+        echo "copy $t"
         return 0
 #        echo $t is not existed
     elif [[ -d $s ]] ; then
-        [[ -e $t ]] || { mkdir $t; echo mkdir $t;}
-        [[ -d $t ]] && {
+        [[ -e $t ]] || { mkdir $t; echo "mkdir $t";}
+        if [[ -d $t ]] ; then
 #            md5_s=$(cd $s; fd . -t f --exec md5sum {} | sort | md5sum)
 #            md5_t=$(cd $t; fd . -t f --exec md5sum {} | sort | md5sum)
             if [[ $(get_md5 $s) != $(get_md5 $t) ]] ; then
@@ -114,7 +114,9 @@ try_cp() {
                 $DEBUG && echo "skip dir $s"
             fi
             return 0
-        } || echo "$t is not existed"
+        else
+            echo "$t is not existed"
+        fi
     fi
     return 1
 }
