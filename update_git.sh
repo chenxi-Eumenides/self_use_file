@@ -88,7 +88,7 @@ try_cp() {
                 cp $s $t
                 echo copy $s
             else
-                $DEGUG && echo skip $s
+                $DEBUG && echo skip $s
             fi
             return 0
         fi
