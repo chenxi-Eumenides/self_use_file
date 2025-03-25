@@ -74,44 +74,54 @@ delete_find() {
 try_cp() {
     [[ -n $1 ]] || return 1
     [[ -n $2 ]] || return 1
-#    $DEBUG && echo "cp $1 $2" && return 0
 
     s=$1
     t=$2
-    [[ -f $s ]] && {
+    if [[ -f $s ]] ; then
         # $s is file
         [[ -d $t ]] && t=$t/$(basename $s)
-        [[ -f $t ]] && {
+        if [[ -f $t ]] ; then
             # $t is file
-            md5_s=$(md5sum $s | awk '{print $1}')
-            md5_t=$(md5sum $t | awk '{print $1}')
-            [[ $md5_s != $md5_t ]] && {
+#            md5_s=$(md5sum $s | awk '{print $1}')
+#            md5_t=$(md5sum $t | awk '{print $1}')
+            if [[ $(get_md5 $s) != $(get_md5 $t) ]] ; then
                 cp $s $t
                 echo copy $s
-            } || echo same $s
+            else
+                $DEGUG && echo skip $s
+            fi
             return 0
-        }
+        fi
         [[ -e $(dirname $t) ]] || {
             mkdir -p $(dirname $t)
         }
         cp $s $t
         echo copy $t
         return 0
-        echo $t is not existed
-    }
-    [[ -d $s ]] && {
+#        echo $t is not existed
+    elif [[ -d $s ]] ; then
         [[ -e $t ]] || { mkdir $t; echo mkdir $t;}
         [[ -d $t ]] && {
-            md5_s=$(cd $s; fd . -t f --exec md5sum {} | sort | md5sum)
-            md5_t=$(cd $t; fd . -t f --exec md5sum {} | sort | md5sum)
-            [[ $md5_s != $md5_t ]] && {
+#            md5_s=$(cd $s; fd . -t f --exec md5sum {} | sort | md5sum)
+#            md5_t=$(cd $t; fd . -t f --exec md5sum {} | sort | md5sum)
+            if [[ $(get_md5 $s) != $(get_md5 $t) ]] ; then
                 cp -r $s/* $t
                 echo copydir $s $t
-            } || echo samedir $s
+            else
+                $DEBUG && echo "skip dir $s"
+            fi
             return 0
-        } || echo $t is not existed
-    }
+        } || echo "$t is not existed"
+    fi
     return 1
+}
+
+get_md5() {
+    if [[ -f $1 ]] ; then
+        echo $(md5sum $1 | awk '{print $1}')
+    elif [[ -d $1 ]] ; then
+        echo $(cd $1; fd . -t f --exec md5sum {} | sort | md5sum)
+    fi
 }
 
 git_update() {
