@@ -82,12 +82,10 @@ try_cp() {
         [[ -d $t ]] && t=$t/$(basename $s)
         if [[ -f $t ]] ; then
             # $t is file
-#            md5_s=$(md5sum $s | awk '{print $1}')
-#            md5_t=$(md5sum $t | awk '{print $1}')
             if [[ $(get_md5 $s) != $(get_md5 $t) ]] ; then
                 cp $s $t
                 echo copy $s
-                if [[ $s == $tem/Empty_File ]] ; then
+                if [[ "$s" == "$tem/Empty_File" ]] ; then
                     echo $(get_md5 $s)
                     echo $(get_md5 $t)
                 fi
