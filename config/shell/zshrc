@@ -25,7 +25,7 @@ ZSH_THEME="chenxi-theme"
 
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
+ zstyle ':omz:update' mode auto      # update automatically without asking
 # zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 # Uncomment the following line to change how often to auto-update (in days).
@@ -87,11 +87,12 @@ source $ZSH/oh-my-zsh.sh
 export LANG=zh_CN.UTF-8
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='nano'
-else
-  export EDITOR='nano'
-fi
+#if [[ -n $SSH_CONNECTION ]]; then
+#  export EDITOR='nano'
+#else
+#  export EDITOR='nano'
+#fi
+export EDITOR='nano'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -104,9 +105,11 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source ~/.zsh_alias
-source ~/.zsh_values
+[[ -f $HOME/.zsh_define ]] && source ~/.zsh_define
+[[ -f $HOME/.zsh_user_env ]] && source ~/.zsh_user_env
 
-bash ~/Code/Scripts/tools/auto_attach_tmux.sh quiet
+[[ -f Code/Scripts/tools/auto_attach_tmux.sh ]] && {
+    bash ~/Code/Scripts/tools/auto_attach_tmux.sh quiet
+}
 
-precmd () { echo -n "\x1b]1337;CurrentDir=$(pwd)\x07" }
+#precmd () { echo -n "\x1b]1337;CurrentDir=$(pwd)\x07" }

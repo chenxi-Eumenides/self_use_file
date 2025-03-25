@@ -26,6 +26,7 @@
 #ExecStopPost=停止当其服务之后执行的命令
 #RestartSec=自动重启当前服务间隔的秒数
 #*Restart=定义何种情况 Systemd 会自动重启当前服务，可能的值包括always（总是重启）、on-success、on-failure、on-abnormal、on-abort、on-watchdog
+#RuntimeMaxSec=运行最大时间
 #TimeoutSec=定义 Systemd 停止当前服务之前等待的秒数
 #Environment=指定环境变量
 

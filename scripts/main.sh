@@ -1,14 +1,21 @@
 #!/bin/bash
+# conf in ./config/<file_basename>.conf
 
 declare -A dir_url
 declare -A file_url
 path=$(dirname $0)
 
 var_name() {
+    [ -f $path/config/$(basename $0).conf ] || {
+        ERROR_MSG="no conf, check $path/config/$(basename $0).conf."
+        p_help
+        return 1
+    }
     for line in $(awk 'NF && $0 !~ /^#/' $path/config/$(basename $0).conf) ; do
         file_url[${line%=*}]=$(eval echo ${line#*=})
+        all_file_key="$all_file_key ${line%=*}"
     done
-    all_file_key="${!file_url[*]}"
+    #all_file_key="${!file_url[*]}"
 }
 
 run_file() {
@@ -69,50 +76,51 @@ p_help() {
         echo " USEAGE:  run.sh [ options ] NAME [ args ]"
         echo ""
         echo " options:"
-        echo "   -h | --help         :  print this useage."
-        echo "   -w | --where        :  print file url."
-        echo "   -e | --edit         :  edit file with ${EDITOR}."
-        echo "   -r | --run          :  run file directly."
+        echo "   -h | --help   :  print this useage."
+        echo "   -w | --where  :  print file url."
+        echo "   -e | --edit   :  edit file with ${EDITOR}."
+        echo "   -r | --run    :  run file directly."
         echo " args:"
-        echo "   NAME                :  ${all_file_key}"
-        echo "   ARGS                :  script args. (e.t. start | stop | restart | help )"
+        echo "   NAME          :  ${all_file_key}"
+        #echo "   NAME          :  $(for key in ${all_file_key}; do print $key; done)"
+        echo "   ARGS          :  script args. (use -h or help to get more info.)"
     fi
     return 0
 }
 
 main() {
-    [[ -z $1 ]] && p_help && exit 0
+    [[ -z $1 ]] && p_help && return 0
     case ${1} in
         "-h"|"--help")
-            p_help ${@:2} && exit 0
+            p_help ${@:2} && return 0
         ;;
         "-l"|"--list")
-            p_list $2 && exit 0
+            p_list $2 && return 0
         ;;
         "-w"|"--where")
             name=$2
-            find_file $2 skip || exit 1
-            echo ${target_file} && exit 0
+            find_file $2 skip || return 1
+            echo ${target_file} && return 0
         ;;
         "-e"|"--edit")
             name=$2
-            find_file $2 skip || exit 1
-            $EDITOR ${target_file} && exit 0
+            find_file $2 skip || return 1
+            $EDITOR ${target_file} && return 0
         ;;
         "-r"|"--run")
             name=$2
-            find_file $2 && { run_file ${@:3}; exit 0; }
-            check_file $2 && { bash ${@:2}; exit 0; }
+            find_file $2 && { run_file ${@:3}; return 0; }
+            check_file $2 && { bash ${@:2}; return 0; }
             p_help
-            exit 1
+            return 1
         ;;
         *)
-            p_help && exit 0
+            p_help && return 0
         ;;
     esac
 }
 
-var_name
+var_name || exit 1
 main $*
 
-exit 0
+exit $?

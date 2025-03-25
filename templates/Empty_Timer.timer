@@ -1,0 +1,36 @@
+[Unit]
+# 官网：https://www.freedesktop.org/software/systemd/man/latest/systemd.time.html
+#Description=描述
+
+[Service]
+# 具体时间描述：Mon,Tue *-*-01..04 12:00:00
+# DayOfWeek Year-Month-Day Hour:Minute:Second
+# 用 *  表示任意一个值
+# 用 .. 表示一个范围
+# 用 ,  连接多个值
+# 用 /  表示间隔的值
+# 相对时间描述：1m5s
+# 微妙：us uesc
+# 毫秒：ms msec
+# 秒：s sec second seconds
+# 分：m min minute minutes
+# 时：h hr hour hours
+# 天：d day days
+# 周：w week weeks
+# 月：M month months
+# 年：y year years
+# 星期：Mon Tue Wed thu Fri Sat Sun
+#OnCalendar= # 具体时间
+#OnActiveSec= # 相对单元激活时间
+#OnBootSec= # 相对系统启动时间
+#OnStartupSec= # 相对systemd启动时间
+#OnUnitActiveSec= # 相对上一次单元激活时间
+#OnUnitInactiveSec= # 相对上一次单元休眠时间
+
+#AccuracySec=1ms # 时间执行精度，默认60s
+#RandomizedDelaySec=60s # 随机执行延迟
+Persistent=true # 是否在过期后立刻执行
+#Unit=%i.service # 启动的服务名称
+
+[Install]
+WantedBy=timers.target

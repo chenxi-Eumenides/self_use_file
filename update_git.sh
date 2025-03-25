@@ -11,17 +11,14 @@ setup() {
     tgt=$(pwd)
 }
 
-main() {
-    [[ -z $1 ]] && read -p "input commit info: " input && { [ -z $input ] && echo "no input." && return 1; }
-    copy_file
-    delete_file
-    [[ -z $input ]] && input=$*
-    git_update $input
+copy_file() {
+    copy_script
+    copy_config
+    copy_template
 }
 
-copy_file() {
+copy_script() {
     try_cp $scr/run.sh $tgt/scripts/main.sh
-
     try_cp $scr/config/run.sh.conf $tgt/scripts/config/main.sh.conf
 
     try_cp $scr/tools/auto_attach_tmux.sh $tgt/scripts/tools/auto_attach_tmux.sh
@@ -33,13 +30,6 @@ copy_file() {
     try_cp $scr/tools/v2ray_dat_update.sh $tgt/scripts/tools/v2ray_dat_update.sh
     try_cp $scr/tools/vnc.sh $tgt/scripts/tools/vnc.sh
 
-    try_cp $tem/Empty_Bash.sh $tgt/templates/Empty_Bash.sh
-    try_cp $tem/Empty_Script_in_Screen.sh $tgt/templates/Empty_Script_in_Screen.sh
-    try_cp $tem/Empty_Script.sh $tgt/templates/Empty_Script.sh
-    try_cp $tem/Empty_Service.service $tgt/templates/Empty_Service.service
-
-    try_cp $con $tgt/config
-
     try_cp $HOME/Apps/blog/build.sh $tgt/scripts/apps/hugo-build.sh
     try_cp $HOME/Apps/AI-webUI/run.sh $tgt/scripts/apps/openwebui-run.sh
 
@@ -47,6 +37,25 @@ copy_file() {
     try_cp $HOME/Games/Minecraft/Server/default.run_server.sh $tgt/scripts/games/minecraft-server-run.sh
     try_cp $HOME/Games/Terraria/run.sh $tgt/scripts/games/terraria-server-run.sh
     try_cp $HOME/Games/Tmodloader/run.sh $tgt/scripts/games/tmodloader-server-manager-run.sh
+}
+
+copy_config() {
+    try_cp $con $tgt/config
+    #try_cp /
+}
+
+copy_template() {
+    try_cp $tem/Empty_Bash.sh $tgt/templates/Empty_Bash.sh
+    try_cp $tem/Empty_Script_in_Screen.sh $tgt/templates/Empty_Script_in_Screen.sh
+    try_cp $tem/Empty_Script.sh $tgt/templates/Empty_Script.sh
+    try_cp $tem/Empty_Service.service $tgt/templates/Empty_Service.service
+    try_cp $tem/Empty_Timer.timer $tgt/templates/Empty_Timer.timer
+
+    try_cp $tem/Empty_Desktop_File.desktop $tgt/templates/Empty_Desktop_File.desktop
+    try_cp $tem/Empty_Doc.docx $tgt/templates/Empty_Doc.docx
+    try_cp $tem/Empty_Excel.docx $tgt/templates/Empty_Excel.docx
+    try_cp $tem/Empty_File $tgt/templates/Empty_File
+    try_cp $tem/Empty_PPT.pptx $tgt/templates/Empty_PPT.pptx
 }
 
 delete_file() {
@@ -128,13 +137,28 @@ help() {
     echo "args: help ."
 }
 
-init
-case $1 in
-  "-h"|"--help"|"help")
-    help
-    exit
-    ;;
-  *)
-    main $*
-    ;;
-esac
+main() {
+    init
+    case ${1-ERROR_NOTSET} in
+      "-h"|"--help"|"help")
+        help
+        return 0
+        ;;
+      "ERROR_NOTSET")
+        read -p "input commit info: " input
+        [ -z $input ] && echo "no input." && return 1
+        copy_file
+        delete_file
+        git_update $input
+        ;;
+      *)
+#        [[ -z $1 ]] && read -p "input commit info: " input && { [ -z $input ] && echo "no input." && return 1; }
+        copy_file
+        delete_file
+        [[ -z $input ]] && input=$*
+        git_update $input
+        ;;
+    esac
+}
+
+main $*
