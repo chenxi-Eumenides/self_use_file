@@ -61,6 +61,7 @@ copy_template() {
 delete_file() {
     for line in $(cat .gitignore); do
         [[ $line == ".git" ]] && continue
+        [[ $line == ".gitignore" ]] && continue
         delete_find $line
     done
 }
