@@ -98,6 +98,7 @@ try_cp() {
         fi
         [[ -e $(dirname $t) ]] || {
             mkdir -p $(dirname $t)
+            echo "$(dirname $t) not existed, create folder"
         }
         cp $s $t
         echo copy $t
