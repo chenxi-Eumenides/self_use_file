@@ -146,7 +146,7 @@ main() {
         ;;
       "ERROR_NOTSET")
         read -p "input commit info: " input
-        [ -z $input ] && echo "no input." && return 1
+        [[ -z $input ]] && echo "no input." && return 1
         copy_file
         delete_file
         git_update $input
