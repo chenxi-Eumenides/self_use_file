@@ -33,6 +33,7 @@ copy_script() {
     try_cp $scr/tools/vnc.sh $tgt/scripts/tools/vnc.sh
 
     try_cp $HOME/Apps/blog/build.sh $tgt/scripts/apps/hugo-build.sh
+    try_cp $HOME/Apps/blog/build.old.sh $tgt/scripts/apps/hugo-build-old.sh
     try_cp $HOME/Apps/AI-webUI/run.sh $tgt/scripts/apps/openwebui-run.sh
 
     try_cp $HOME/Games/Minecraft/Server/run.sh $tgt/scripts/games/minecraft-server-manager-run.sh
