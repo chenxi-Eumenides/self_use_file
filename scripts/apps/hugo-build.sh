@@ -99,14 +99,12 @@ main() {
             build_local || return 1
             get_commit ${@:2} || return 1
             update_git $input || return 1
-            echo "success"
             ;;
         "-g"|"--github"|"github")
             build_github || return 1
             get_commit ${@:2} || return 1
             update_git $input || return 1
             push_git || return 1
-            echo "success"
             ;;
         "-a"|"--all"|"all")
             build_local || return 1
@@ -114,7 +112,6 @@ main() {
             get_commit ${@:2} || return 1
             update_git $input || return 1
             push_git || return 1
-            echo "success"
             ;;
         "-f"|"--force"|"force")
             build_local || return 1
@@ -122,22 +119,18 @@ main() {
             get_commit ${@:2} || return 1
             update_git -f $input || return 1
             push_git || return 1
-            echo "success"
             ;;
         "-n"|"--no"|"no")
             case $2 in
                 "l"|"local")
                     build_local || return 1
-                    echo "success"
                     ;;
                 "g"|"github")
                     build_github || return 1
-                    echo "success"
                     ;;
                 *)
                     build_local || return 1
                     build_github || return 1
-                    echo "success"
                     ;;
             esac
             return 0
@@ -162,7 +155,7 @@ init() {
 
 close() {
     local main_return=$1
-    if [[ ${main_return-default} != "default" ]] ; then
+    if [[ ${main_return-default} == "default" ]] ; then
         log 1 "init failed"
         $enable_log_file && echo "init failed"
     elif [[ $main_return == "0" ]] ; then
